@@ -1,0 +1,25 @@
+np.linalg.norm
+np.argsort
+np.bincount
+np.split
+np.vstack 输入的是一个tuple，里面都是同等shape的ndarray 传入的数组必须具有相同的形状，这里的相同的形状可以满足在拼接方向axis轴上数组间的形状一致即可
+np.hstack
+np.concatenate 用法与上面两个类似，但是需要注意维度，维度为（100，）的可能不好处理
+np.maximium(X,Y,out = None) 比较两个array的对应元素大小，X、Y维度不同时用到了broadcast机制
+
+plt.scatter(x,y,...) x,y可为list，np.array，也可为数值
+
+a = [0] * 10 #意为构造一个10个0的list
+[np.mean(v) for k,v in sorted(k_to_accuracies.items())]
+#.items返回一个可遍历的list，np.mean()求均值，整句话返回一个跟generator(不考虑外面的[]的话，这个generator可list化),而外面的[]则用来强制类型转换
+
+*args：
+*args：（表示的就是将实参中按照位置传值，多出来的值都给args，且以元组tuple的方式呈现）
+
+**kwargs：（表示的就是形参中按照关键字传值把多余的传值以dict字典的方式呈现）
+function(位置参数,默认参数，*args，**kwargs) (**kwargs一定是以x=3,y=4的形式传入的)
+详情见https://www.cnblogs.com/xuyuanyuan123/p/6674645.html
+
+Python中可以将函数名（不写()）作为另一个函数的参数传入并调用
+
+#两个list用加号，表示合并！
