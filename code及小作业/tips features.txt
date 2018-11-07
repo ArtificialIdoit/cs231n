@@ -1,0 +1,48 @@
+#python里有很多操作都是浅拷贝，比如[]选取操作，如果有些数据变换后仍需原数据，请做深拷贝
+
+squeeze()
+#去掉维度为1的无用维度
+
+ndim()
+#返回np.array的维度数
+
+assert len(feats.shape) == 1, 'Feature functions must be one-dimensional'
+#如果不符合维度为1的条件，则抛异常
+
+l = [1,2,3]
+sum(l)
+#sum(l) 为6，是list的sum语句
+
+zip(a,b)
+#zip() 函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表。
+如果各个迭代器的元素个数不一致，则返回列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表。
+#构造的zip是可迭代的
+
+np.dot(a,b)
+#If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
+#If a is an N-D array and b is an M-D array (where M>=2), it is a sum product over the last axis of a and the second-to-last axis of b:
+
+numpy.atleast_2d()
+#把np.array强制转为2维以上，本就是二维以上的array不做变换
+#支持同时传入多个np.array,多个则返回一个list
+#注意是浅拷贝
+
+numpy.diff(a, n=1, axis=-1)
+#a为array，n是隔多少index相减（默认是1），axis为操作维度
+#datetime64结果不一样，详情可自行百度或实验
+
+numpy.arctan2(x1,x2,...)
+#返回坐标系中点(x1,x2)的角度值(0~pi),x1,x2可以是两个array
+
+numpy.floor()
+#向下取整
+
+np.ravel()
+#把数组拉直为向量，浅拷贝
+np.flatten()
+#把数组拉直为向量，深拷贝
+
+numpy.where()的两种用法
+
+learning = 0.5比较好
+#为什么学习率会这么大？因为正则化了吗？

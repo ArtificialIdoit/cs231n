@@ -29,7 +29,22 @@ def softmax_loss_naive(W, X, y, reg):
   # here, it is easy to run into numeric instability. Don't forget the        #
   # regularization!                                                           #
   #############################################################################
-  pass
+  #注意是softmax而不是sigmoid！
+  num_train = X.shape[0]
+  num_class = y.shape
+  for i in range(X.shape[0]):
+    score = X[i,:].dot(W)
+    score = score - score.max()
+    softmax = np.exp(score)
+    softmax = softmax/softmax.sum()
+    loss += -np.log(softmax[y[i]])
+    softmax[y[i]] -= 1
+    dW += X[i,:].reshape((W.shape[0],1))*softmax.reshape((1,W.shape[1]))
+  loss/= num_train
+  # loss也要有正则化项！！！
+  loss += reg*np.square(W).sum()
+  dW/=num_train
+  dW += 2*reg*W
   #############################################################################
   #                          END OF YOUR CODE                                 #
   #############################################################################
@@ -53,7 +68,21 @@ def softmax_loss_vectorized(W, X, y, reg):
   # here, it is easy to run into numeric instability. Don't forget the        #
   # regularization!                                                           #
   #############################################################################
-  pass
+  num_train = X.shape[0]
+  num_class = y.shape
+  score = X.dot(W)
+  score = score - score.max(axis = 1).reshape(num_train,1)
+  softmax = np.exp(score)
+  softmax = softmax/softmax.sum(axis =1).reshape(num_train,1)
+  loss += -np.log(softmax[np.arange(num_train),y]).sum()
+  #softmax没必要都求吧？
+  #有必要，求dW要用到
+  softmax[np.arange(num_train),y] -= 1
+  dW += X.T.dot(softmax)
+  loss/= num_train
+  loss += reg*np.square(W).sum()
+  dW/=num_train
+  dW += 2*reg*W
   #############################################################################
   #                          END OF YOUR CODE                                 #
   #############################################################################

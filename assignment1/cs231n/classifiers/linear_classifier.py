@@ -29,6 +29,8 @@ class LinearClassifier(object):
     A list containing the value of the loss function at each training iteration.
     """
     num_train, dim = X.shape
+    #X.shape返回值是一个tuple，而tuple可以被赋给多个变量
+    #用到了unpack机制，list也有这样的机制
     num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
     if self.W is None:
       # lazily initialize W
@@ -51,7 +53,10 @@ class LinearClassifier(object):
       # Hint: Use np.random.choice to generate indices. Sampling with         #
       # replacement is faster than sampling without replacement.              #
       #########################################################################
-      pass
+      stochastic = np.random.choice(X.shape[0],batch_size,replace = False)
+      X_batch = X[stochastic,:]
+      y_batch = y[stochastic]
+      #这样选取不能修改数据吧？否则会影响原数据？
       #########################################################################
       #                       END OF YOUR CODE                                #
       #########################################################################
@@ -65,7 +70,9 @@ class LinearClassifier(object):
       # TODO:                                                                 #
       # Update the weights using the gradient and the learning rate.          #
       #########################################################################
-      pass
+      self.W -= learning_rate*grad
+      #正则化加了没？
+      #负数去掉了没？
       #########################################################################
       #                       END OF YOUR CODE                                #
       #########################################################################
@@ -94,7 +101,8 @@ class LinearClassifier(object):
     # TODO:                                                                   #
     # Implement this method. Store the predicted labels in y_pred.            #
     ###########################################################################
-    pass
+    scores = X.dot(self.W)
+    y_pred = np.argmax(scores,axis = 1)
     ###########################################################################
     #                           END OF YOUR CODE                              #
     ###########################################################################
@@ -123,7 +131,7 @@ class LinearSVM(LinearClassifier):
 
   def loss(self, X_batch, y_batch, reg):
     return svm_loss_vectorized(self.W, X_batch, y_batch, reg)
-
+    #overrides
 
 class Softmax(LinearClassifier):
   """ A subclass that uses the Softmax + Cross-entropy loss function """

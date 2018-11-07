@@ -29,18 +29,24 @@ def extract_features(imgs, feature_fns, verbose=False):
 
   # Use the first image to determine feature dimensions
   feature_dims = []
+  #保存features的数量，每个函数记录一次
   first_image_features = []
   for feature_fn in feature_fns:
     feats = feature_fn(imgs[0].squeeze())
+    #squeeze()去掉维度为1的无用维度
     assert len(feats.shape) == 1, 'Feature functions must be one-dimensional'
+    #如果不符合维度为1的条件，则抛异常
     feature_dims.append(feats.size)
     first_image_features.append(feats)
 
   # Now that we know the dimensions of the features, we can allocate a single
   # big array to store all features as columns.
   total_feature_dim = sum(feature_dims)
+  #list的sum语句
   imgs_features = np.zeros((num_images, total_feature_dim))
   imgs_features[0] = np.hstack(first_image_features).T
+  #对于一维array，.T似乎没什么作用
+  #np.hastak可传入一个list，这个函数会把里面的np.array统统化为一个向量
 
   # Extract features for the rest of the images.
   for i in range(1, num_images):
@@ -66,6 +72,9 @@ def rgb2gray(rgb):
   
   """
   return np.dot(rgb[...,:3], [0.299, 0.587, 0.144])
+#这是一个RGB转灰度图的常用参数
+#If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
+#If a is an N-D array and b is an M-D array (where M>=2), it is a sum product over the last axis of a and the second-to-last axis of b:
 
 
 def hog_feature(im):
@@ -88,6 +97,7 @@ def hog_feature(im):
   
   # convert rgb to grayscale if needed
   if im.ndim == 3:
+  #维度数
     image = rgb2gray(im)
   else:
     image = np.at_least_2d(im)

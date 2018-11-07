@@ -1,11 +1,31 @@
 np.linalg.norm
 np.argsort
+np.argmax #若未指定axis，则返回一个i*column+j（i、j为index）
 np.bincount
 np.split
 np.vstack 输入的是一个tuple，里面都是同等shape的ndarray 传入的数组必须具有相同的形状，这里的相同的形状可以满足在拼接方向axis轴上数组间的形状一致即可
 np.hstack
 np.concatenate 用法与上面两个类似，但是需要注意维度，维度为（100，）的可能不好处理
 np.maximium(X,Y,out = None) 比较两个array的对应元素大小，X、Y维度不同时用到了broadcast机制
+keepdims 保持其维度属性，可用于np.max(a,axis = 1.keepdims = True)
+np.copy()是深拷贝
+np.transpose(3, 0, 1, 2) #调换维度顺序
+numpy.rollaxis 函数向后滚动特定的轴到一个特定位置，格式如下：
+numpy.rollaxis(arr, axis, start)
+#题外话：如何将轴反转？很简单，构造一个新的np.array，把index = [i,j,k]的元素传入新的array的[k,j,i]位置即可
+
+sort与sorted的区别 http://www.runoob.com/python/python-func-sorted.html
+
+it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
+while not it.finished:
+    .......
+	it.iternext()
+#numpy迭代器，多重索引，可读可写
+
+np.array 如果一开始定义的是int，如果把元素改成小数，那也会被强转成int，需要array.astype('float64')方法进行强转，才可保存小数
+而dtype = 'float64'则是改变了数据的读取方式这一属性，会造成数据变换
+
+sorted(dictionary)
 
 plt.scatter(x,y,...) x,y可为list，np.array，也可为数值
 

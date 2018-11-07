@@ -10,6 +10,10 @@ class TwoLayerNet(object):
   We train the network with a softmax loss function and L2 regularization on the
   weight matrices. The network uses a ReLU nonlinearity after the first fully
   connected layer.
+ 
+  !!!!!!!!!!!!!!!!!!!!!
+  The network uses a ReLU nonlinearity after the first fully
+  connected layer.
 
   In other words, the network has the following architecture:
 
@@ -75,7 +79,9 @@ class TwoLayerNet(object):
     # Store the result in the scores variable, which should be an array of      #
     # shape (N, C).                                                             #
     #############################################################################
-    pass
+    H,C = W2.shape
+    hidden_output = np.maximum(X.dot(W1)+b1,0)
+    scores = hidden_output.dot(W2)+b2
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -92,7 +98,12 @@ class TwoLayerNet(object):
     # in the variable loss, which should be a scalar. Use the Softmax           #
     # classifier loss.                                                          #
     #############################################################################
-    pass
+    softmax = np.exp(scores - scores.max(axis = 1,keepdims = True))
+    softmax = softmax/softmax.sum(axis = 1,keepdims = True)
+    loss = (-np.log(softmax[range(N),y])).sum()/N + reg*(np.square(W1).sum()+np.square(W2).sum())
+    #注意一定要减去最大值，防止数值溢出
+    #正则化
+    #除以N！！！
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -104,7 +115,20 @@ class TwoLayerNet(object):
     # and biases. Store the results in the grads dictionary. For example,       #
     # grads['W1'] should store the gradient on W1, and be a matrix of same size #
     #############################################################################
-    pass
+    softmax[range(N),y] -= 1
+    #对每个最终输出节点的输入（即hidden_output.dot(W2)）中每一个值的导数
+    dW2 = hidden_output.T.dot(softmax)/N+2*reg*W2
+    db2 = softmax.sum(axis = 0)/N
+    dH = softmax.dot(W2.T)
+    dReLu = hidden_output.copy()
+    dReLu[dReLu>0] = 1
+    dH = dH*dReLu
+    dW1 = X.T.dot(dH)/N+2*reg*W1
+    db1 = dH.sum(axis = 0)/N
+    grads['W1'] = dW1
+    grads['W2'] = dW2
+    grads['b1'] = db1
+    grads['b2'] = db2
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -134,7 +158,7 @@ class TwoLayerNet(object):
     """
     num_train = X.shape[0]
     iterations_per_epoch = max(num_train / batch_size, 1)
-
+    #epoch 是一次完整的train_set迭代
     # Use SGD to optimize the parameters in self.model
     loss_history = []
     train_acc_history = []
@@ -148,7 +172,11 @@ class TwoLayerNet(object):
       # TODO: Create a random minibatch of training data and labels, storing  #
       # them in X_batch and y_batch respectively.                             #
       #########################################################################
-      pass
+      replace = num_train < batch_size
+      #如果样本数小于batchsize就重复取样
+      minibatch = np.random.choice(num_train,batch_size,replace = replace)
+      X_batch = X[minibatch,:]
+      y_batch = y[minibatch]
       #########################################################################
       #                             END OF YOUR CODE                          #
       #########################################################################
@@ -163,7 +191,11 @@ class TwoLayerNet(object):
       # using stochastic gradient descent. You'll need to use the gradients   #
       # stored in the grads dictionary defined above.                         #
       #########################################################################
-      pass
+      self.params['W1'] -= learning_rate*grads['W1']
+      self.params['b1'] -= learning_rate*grads['b1']
+      self.params['W2'] -= learning_rate*grads['W2']
+      self.params['b2'] -= learning_rate*grads['b2']
+      #后面有learning_rate *= learning_rate_decay
       #########################################################################
       #                             END OF YOUR CODE                          #
       #########################################################################
@@ -181,6 +213,7 @@ class TwoLayerNet(object):
 
         # Decay learning rate
         learning_rate *= learning_rate_decay
+        #每一次epoch衰减一次
 
     return {
       'loss_history': loss_history,
@@ -208,7 +241,11 @@ class TwoLayerNet(object):
     ###########################################################################
     # TODO: Implement this function; it should be VERY simple!                #
     ###########################################################################
-    pass
+    W1, b1 = self.params['W1'], self.params['b1']
+    W2, b2 = self.params['W2'], self.params['b2']
+    hidden_output = np.maximum(X.dot(W1)+b1,0)
+    scores = hidden_output.dot(W2)+b2
+    y_pred = scores.argmax(axis = 1)
     ###########################################################################
     #                              END OF YOUR CODE                           #
     ###########################################################################
